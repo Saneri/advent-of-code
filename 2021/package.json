@@ -1,0 +1,23 @@
+{
+  "name": "aoc-2021",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Saneri/AOC2021.git"
+  },
+  "author": "Santeri Suitiala",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node day4/solve.ts"
+  },
+  "bugs": {
+    "url": "https://github.com/Saneri/AOC2021/issues"
+  },
+  "homepage": "https://github.com/Saneri/AOC2021#readme",
+  "devDependencies": {
+    "@types/node": "latest",
+    "ts-node": "latest",
+    "typescript": "latest"
+  },
+  "dependencies": {}
+}

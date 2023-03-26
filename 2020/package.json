@@ -1,0 +1,27 @@
+{
+  "name": "aoc2020",
+  "version": "1.0.0",
+  "description": "Advent of Code 2020",
+  "scripts": {
+    "1": "node day1/solve.js",
+    "2": "node day2/solve.js",
+    "3": "node day3/solve.js",
+    "4": "node day4/solve.js",
+    "5": "node day5/solve.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Saneri/AOC2020.git"
+  },
+  "author": "Santeri Suitiala",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Saneri/AOC2020/issues"
+  },
+  "homepage": "https://github.com/Saneri/AOC2020#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "assert": "^2.0.0",
+    "lodash": "^4.17.20"
+  }
+}
