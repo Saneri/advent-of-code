@@ -1,3 +1,3 @@
-module saneri/solve
+module saneri/aoc
 
 go 1.21.2

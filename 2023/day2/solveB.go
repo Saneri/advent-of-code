@@ -1,20 +1,12 @@
 package main
 
 import (
+	"saneri/aoc/utils"
 	"fmt"
 	"log"
-	"os"
 	"strings"
 	"strconv"
 )
-
-func readInput() []string {
-	data, err := os.ReadFile("input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	return strings.Split(string(data), "\n")
-}
 
 func updateMaxValue(count int, color string, maxValues map[string]int) {
 	switch (color) {
@@ -40,7 +32,7 @@ func updateMaxValue(count int, color string, maxValues map[string]int) {
 
 
 func main() {
-	data := readInput()
+	data := utils.ReadInput("input.txt")
 	sum := 0
 	for _, line := range data {
 		splitByColon := strings.Split(line, ": ")
@@ -63,7 +55,6 @@ func main() {
 			}
 			
 		}
-		fmt.Println(maxValues)
 		sum += maxValues["red"] * maxValues["green"] * maxValues["blue"]
 	}
 	fmt.Println(sum)

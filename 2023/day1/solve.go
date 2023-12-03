@@ -1,21 +1,13 @@
 package main
 
 import (
+	"saneri/aoc/utils"
 	"fmt"
 	"log"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
 )
-
-func readInput() []string {
-	data, err := os.ReadFile("input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	return strings.Split(string(data), "\n")
-}
 
 func stringToNumber(str string) int {
 	wordToNumber := map[string]int{
@@ -45,7 +37,7 @@ func stringToNumber(str string) int {
 }
 
 func main() {
-	data := readInput()
+	data := utils.ReadInput("input.txt")
 	sum := 0
 	re := regexp.MustCompile("[1-9]|(one)|(two)|(three)|(four)|(five)|(six)|(seven)|(eight)|(nine)")
 	for _, line := range data {
