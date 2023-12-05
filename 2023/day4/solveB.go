@@ -2,25 +2,10 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"regexp"
 	"saneri/aoc/utils"
 	"slices"
-	"strconv"
 	"strings"
 )
-
-func arrayStringToInt(strArray []string) []int {
-	intArray := []int{}
-	for _, element := range strArray {
-		number, err := strconv.Atoi(element)
-		if err != nil {
-			log.Fatal(err)
-		}
-		intArray = append(intArray, number)
-	}
-	return intArray
-}
 
 func main() {
 	data := utils.ReadInput("input.txt")
@@ -30,11 +15,10 @@ func main() {
 	for i := range tickets {
 		tickets[i] = 1
 	}
-	re := regexp.MustCompile(`\d+`)
 	for _, line := range data {
 		groups := strings.Split(strings.Split(line, ":")[1], "|")
-		winningNumbers := arrayStringToInt(re.FindAllString(groups[0], -1))
-		ownNumbers := arrayStringToInt(re.FindAllString(groups[1], -1))
+		winningNumbers := utils.FindNumbers(groups[0])
+		ownNumbers := utils.FindNumbers(groups[1])
 
 		winningNumberCount := 0
 		for _, ownNumber := range ownNumbers {
