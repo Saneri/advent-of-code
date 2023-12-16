@@ -81,14 +81,10 @@ func main() {
 		seeds = nextGenSeeds
 
 		}
-		min := seeds[0][0]
+		minSeed := seeds[0][0]
 		for _, value := range seeds {
-			if value[0] < min {
-				min = value[0]
-			}
-			if value[0] + value[1] -1 < min {
-				min = value[0] + value[1] -1
-			}
+			minSeed = min(minSeed, value[0])
+			minSeed = min(minSeed, value[0] + value[1] -1)
 	}
-	fmt.Println(min)
+	fmt.Println(minSeed)
 }
