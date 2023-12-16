@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
+	"maps"
 	"saneri/aoc/utils"
+	"strconv"
 	"strings"
 )
 
@@ -73,8 +75,71 @@ func pipeToStr(coord [2]int) string {
 	return fmt.Sprint(coord[0]) + "," + fmt.Sprint(coord[1])
 }
 
-func getMazeLength(grid []string, start [2]int, end [2]int) int {
-	visited := make(map[string]bool)
+func isInsideLoop(grid []string, point [2]int) bool {
+	x := point[0]
+	y := point[1]
+	amountOfWalls := 0
+	amountOfF7 := 0
+	amountOfLJ := 0
+	for i := x; i >= 0; i-- {
+		switch grid[y][i] {
+		case '|':
+			amountOfWalls++
+		case '7':
+			amountOfF7++
+		case 'F':
+			amountOfF7++
+		case 'L':
+			amountOfLJ++
+		case 'J':
+			amountOfLJ++
+		}
+	}
+	amountOfWalls += min(amountOfF7, amountOfLJ)
+	return amountOfWalls % 2 == 1
+}
+
+func findEnclosedTiles(tiles map[string]bool, grid []string, current [2]int, visited map[string]bool) (map[string]bool, bool) {
+	gridWidth := len(grid[0])
+	gridHeight := len(grid)
+	x := current[0]
+	y := current[1]
+	tiles[pipeToStr([2]int{x, y})] = true
+	enclosed := true
+	if x == 0 || x == gridWidth-1 || y == 0 || y == gridHeight-1 || !isInsideLoop(grid, current) {
+		return tiles, false
+	}
+
+	for _, dir := range [][2]int{{0, -1}, {1, 0}, {0, 1}, {-1, 0}} {
+		newX, newY := x+dir[0], y+dir[1]
+		if !visited[pipeToStr([2]int{newX, newY})] && !tiles[pipeToStr([2]int{newX, newY})] {
+			_, wasEnclosed := findEnclosedTiles(tiles, grid, [2]int{newX, newY}, visited)
+			if !wasEnclosed {
+				enclosed = false
+			}
+		}
+	}
+	return tiles, enclosed
+}
+
+func removeJunk(grid []string, visited map[string]bool) []string {
+	newGrid := make([]string, len(grid))
+    copy(newGrid, grid)
+
+	for y, line := range newGrid {
+        for x := range line {
+			_, ok := visited[pipeToStr([2]int{x, y})]
+            if !ok {
+                newGrid[y] = newGrid[y][:x] + "." + newGrid[y][x+1:]
+            }
+        }
+    }
+    return newGrid
+}
+
+func getMazeLength(grid []string, start [2]int, end [2]int) (int, int) {
+	sSpot := findChar(grid, 'S')
+	visited := map[string]bool{pipeToStr(sSpot): true}
 	current := start
 	length := 2
 	for current != end {
@@ -98,12 +163,35 @@ func getMazeLength(grid []string, start [2]int, end [2]int) int {
 		}
 		length++
 	}
-	return length
+	visited[pipeToStr(end)] = true
+
+	grid = removeJunk(grid, visited)
+
+	gridWidth := len(grid[0])
+	gridHeight := len(grid)
+	enclosedTiles := make(map[string]bool)
+	for tile := range visited {
+		split := strings.Split(tile, ",")
+		x, _ := strconv.Atoi(split[0])
+		y, _ := strconv.Atoi(split[1])
+		
+		for _, dir := range [][2]int{{0, -1}, {1, 0}, {0, 1}, {-1, 0}} {
+			newX, newY := x+dir[0], y+dir[1]
+			if newX >= 0 && newY >= 0 && newX < gridWidth && newY < gridHeight && grid[newY][newX] == '.' {
+				newTiles, areEnclosed := findEnclosedTiles(maps.Clone(enclosedTiles), grid, [2]int{newX, newY}, visited)
+				if areEnclosed {
+					maps.Copy(enclosedTiles, newTiles)
+				}
+			}
+		}
+	}
+	return length, len(enclosedTiles)
 }
 
 func main() {
 	data := utils.ReadInput("input.txt")
 	start, end := findStartAndEnd(data)
-	length := getMazeLength(data, start, end)
-	fmt.Println(length / 2)
+	length, tiles := getMazeLength(data, start, end)
+	fmt.Println("a:", length / 2)
+	fmt.Println("b:", tiles)
 }
