@@ -24,13 +24,6 @@ var pokerCards = map[string]int{
 	"A":  14,
 }
 
-func max(a int, b int) int {
-	if (a > b) {
-		return a
-	}
-	return b
-}
-
 func compareHand(hand string) int {
 	split := strings.Split(hand, " ")
 	cards := split[0]

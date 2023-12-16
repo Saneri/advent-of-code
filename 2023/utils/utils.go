@@ -53,10 +53,3 @@ func ArrayStringToInt(strArray []string) []int {
 	}
 	return intArray
 }
-
-func Min(a int, b int) int {
-	if (a < b) {
-		return a
-	}
-	return b
-}

@@ -30,18 +30,18 @@ func generateSeeds(values [][]int, mapping [][]int) [][]int {
 				source := mapEntry[1]
 				sourceLen := mapEntry[2]
 				if source <= value && value < source+sourceLen {
-					moveLen := utils.Min(source+sourceLen-value, length)
+					moveLen := min(source+sourceLen-value, length)
 					seeds = append(seeds, []int{value, moveLen})
 					length -= moveLen
 					value += moveLen
 					foundSplit = true
 					break;
 				} else if source > value {
-					minLength = utils.Min(source - value, minLength)
+					minLength = min(source - value, minLength)
 				}
 			}
 			if !foundSplit {
-				skipLength := utils.Min(length, minLength)
+				skipLength := min(length, minLength)
 				seeds = append(seeds, []int{value, skipLength})
 				value += skipLength
 				length -= skipLength
