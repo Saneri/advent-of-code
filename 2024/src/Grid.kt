@@ -1,4 +1,4 @@
-class Grid<T>(private val grid: Array<Array<T>>, var currentCell: Pair<Int, Int>) {
+class Grid<T>(var grid: Array<Array<T>>, var currentCell: Pair<Int, Int>) {
     private var rows = grid.size
     private var cols = grid[0].size
 
@@ -75,6 +75,38 @@ class Grid<T>(private val grid: Array<Array<T>>, var currentCell: Pair<Int, Int>
             true
         } else {
             false
+        }
+    }
+
+    fun checkUp(): T? {
+        return if (currentCell.first > 0) {
+            grid[currentCell.first - 1][currentCell.second]
+        } else {
+            null
+        }
+    }
+
+    fun checkDown(): T? {
+        return if (currentCell.first < rows - 1) {
+            grid[currentCell.first + 1][currentCell.second]
+        } else {
+            null
+        }
+    }
+
+    fun checkLeft(): T? {
+        return if (currentCell.second > 0) {
+            grid[currentCell.first][currentCell.second - 1]
+        } else {
+            null
+        }
+    }
+
+    fun checkRight(): T? {
+        return if (currentCell.second < cols - 1) {
+            grid[currentCell.first][currentCell.second + 1]
+        } else {
+            null
         }
     }
 
