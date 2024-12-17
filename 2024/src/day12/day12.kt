@@ -1,13 +1,10 @@
 package day12
 
 import readInput
+import toCoordinates
 
 fun main() {
-    val map: Map<Pair<Int, Int>, Char> = readInput(12).flatMapIndexed { rowIndex, row ->
-        row.mapIndexed { colIndex, char ->
-            Pair(rowIndex, colIndex) to char
-        }
-    }.toMap()
+    val map = toCoordinates(readInput(12))
 
     var price = 0
     val visited = mutableSetOf<Pair<Int, Int>>()

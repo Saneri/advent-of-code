@@ -1,13 +1,10 @@
 package day10
 
 import readInput
+import toCoordinates
 
 fun main() {
-    val map = readInput(10).flatMapIndexed { rowIndex, row ->
-        row.mapIndexed { colIndex, char ->
-            Pair(rowIndex, colIndex) to char
-        }
-    }.toMap()
+    val map = toCoordinates(readInput(10))
 
     fun iter(position: Pair<Int, Int>, level: Int): Int {
         if (level > 9) {
