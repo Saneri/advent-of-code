@@ -16,21 +16,8 @@ data class Node(
     val position: Pair<Int, Int>,
     val direction: Direction,
     val weight: Int,
-    val tileCount: Int
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as Node
-        return position == other.position && direction == other.direction
-    }
-
-    override fun hashCode(): Int {
-        var result = position.hashCode()
-        result = 31 * result + direction.hashCode()
-        return result
-    }
-}
+    val parent: Node? = null
+)
 
 fun Node.move(action: Action): Node = when (action) {
     Action.STRAIGHT -> {
@@ -41,7 +28,7 @@ fun Node.move(action: Action): Node = when (action) {
             Direction.LEFT -> position.first to position.second - 1
 
         }
-        Node(newPos, this.direction, this.weight + 1, this.tileCount + 1)
+        Node(newPos, this.direction, this.weight + 1)
     }
 
     Action.RIGHT -> {
@@ -51,7 +38,7 @@ fun Node.move(action: Action): Node = when (action) {
             Direction.DOWN -> Direction.LEFT
             Direction.LEFT -> Direction.UP
         }
-        Node(this.position, newDir, this.weight + 1000, this.tileCount)
+        Node(this.position, newDir, this.weight + 1000)
     }
 
     Action.LEFT -> {
@@ -61,7 +48,7 @@ fun Node.move(action: Action): Node = when (action) {
             Direction.DOWN -> Direction.RIGHT
             Direction.LEFT -> Direction.DOWN
         }
-        Node(this.position, newDir, this.weight + 1000, this.tileCount)
+        Node(this.position, newDir, this.weight + 1000)
     }
 }
 
@@ -69,23 +56,34 @@ fun main() {
     val grid = toCoordinates(readInput(16))
     val start = grid.entries.first { it.value == 'S' }.key
     val end = grid.entries.first { it.value == 'E' }.key
-    val visited = mutableSetOf<Node>()
+    val visited = mutableMapOf<Pair<Pair<Int, Int>, Direction>, Int>()
     val queue = PriorityQueue<Node>(compareBy { it.weight })
-    queue.add(Node(start, Direction.RIGHT, 0, 1))
+    queue.add(Node(start, Direction.RIGHT, 0))
+
+    val fastPathPositions = mutableSetOf<Pair<Int, Int>>()
+    var minWeight = Int.MAX_VALUE
 
     while (queue.isNotEmpty()) {
         val current = queue.poll()
         if (current.position == end) {
-            println(current.weight)
-            break
+            if (current.weight <= minWeight) {
+                minWeight = current.weight
+                var node = current
+                while (node.parent != null) {
+                    fastPathPositions.add(node.position)
+                    node = node.parent
+                }
+            }
+            continue
         }
-        visited.add(current)
+        visited[current.position to current.direction] = current.weight
 
         Action.entries.forEach { action ->
-            val nextNode = current.move(action)
-            if (!visited.contains(nextNode) && grid[nextNode.position] != '#') {
+            val nextNode = current.move(action).copy(parent = current)
+            if (visited[nextNode.position to nextNode.direction] == null && grid[nextNode.position] != '#') {
                 queue.add(nextNode)
             }
         }
     }
+    println(fastPathPositions.size)
 }
