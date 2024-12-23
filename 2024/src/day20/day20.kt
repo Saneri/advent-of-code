@@ -2,6 +2,7 @@ package day20
 
 import readInput
 import toCoordinates
+import kotlin.math.abs
 
 enum class Direction {
     UP, RIGHT, DOWN, LEFT
@@ -21,6 +22,9 @@ fun move(current: Pair<Int, Int>, direction: Direction): Pair<Int, Int> {
     }
 }
 
+const val MAX_DISTANCE = 20
+const val MIN_SAVED = 50
+
 fun main() {
     val grid = toCoordinates(readInput(20)).toMutableMap()
 
@@ -32,31 +36,37 @@ fun main() {
     val queue = ArrayDeque<Node>()
     queue.add(Node(start, 0))
 
+    fun checkShortcuts(start: Pair<Int, Int>, picoseconds: Int) {
+        for (dx in -MAX_DISTANCE..MAX_DISTANCE) {
+            val maxDy = MAX_DISTANCE - abs(dx)
+            for (dy in -maxDy..maxDy) {
+                val next = start.first + dx to start.second + dy
+                val distance = abs(dx) + abs(dy)
+                if (distance <= MAX_DISTANCE && (grid[next] == '.' || grid[next] == 'E')
+                    && !visited.contains(next)
+                ) {
+                    shortcuts.add(Node(next, picoseconds + distance))
+                }
+            }
+        }
+    }
+
     while (queue.isNotEmpty()) {
         val current = queue.removeFirst()
         shortcuts.filter { it.position == current.position }.forEach { shortcut ->
             val saved = current.picoseconds - shortcut.picoseconds
-            if (saved >= 100) {
+            if (saved >= MIN_SAVED) {
                 sum++
             }
         }
 
         visited.add(current.position)
 
+        checkShortcuts(current.position, current.picoseconds)
         Direction.entries.forEach {
             val next = move(current.position, it)
             if ((grid[next] == '.' || grid[next] == 'E') && !visited.contains(next)) {
                 queue.add(Node(next, current.picoseconds + 1))
-            }
-            if (grid[next] == '#') {
-                Direction.entries.forEach { dir ->
-                    val nextShortcut = move(next, dir)
-                    if ((grid[nextShortcut] == '.' || grid[nextShortcut] == 'E')
-                        && !visited.contains(nextShortcut)
-                    ) {
-                        shortcuts.add(Node(nextShortcut, current.picoseconds + 2))
-                    }
-                }
             }
         }
     }
