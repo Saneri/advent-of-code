@@ -6,7 +6,6 @@ ranges = [(int(x[0]), int(x[1])) for x in [x.split('-') for x in lines[0].split(
 areas = [ranges[0]]
 for range in ranges[1:]:
     overlapping = []
-    touched = False
     for area in areas:
         # range outside area
         if range[1] < area[0] or range[0] > area[1]:
@@ -19,7 +18,7 @@ for range in ranges[1:]:
         for area in overlapping:
             areas.remove(area)
         areas.append((start, end))
-    if not overlapping and not touched:
+    if not overlapping:
         areas.append(range)
 
 count = 0
