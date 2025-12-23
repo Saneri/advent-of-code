@@ -4,6 +4,7 @@ https://adventofcode.com/
 
 | Year |  Language  | Stars :star: |
 | :--- | :--------: | -----------: |
+| 2025 |   Python   |           24 |
 | 2024 |   Kotlin   |           41 |
 | 2023 |     Go     |           40 |
 | 2022 |   Python   |           30 |
